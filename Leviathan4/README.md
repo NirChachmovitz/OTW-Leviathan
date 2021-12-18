@@ -3,6 +3,7 @@
 inside the home directory there is a directory called `.trash`. 
 Inside there is a file called `bin`:
 
+```
 leviathan4@leviathan:~$ ls -la
 total 24
 drwxr-xr-x  3 root root       4096 Aug 26  2019 .
@@ -19,21 +20,28 @@ total 16
 dr-xr-x--- 2 root       leviathan4 4096 Aug 26  2019 .
 drwxr-xr-x 3 root       root       4096 Aug 26  2019 ..
 -r-sr-x--- 1 leviathan5 leviathan4 7352 Aug 26  2019 bin
+```
 
 Let's run it:
 
+```
 leviathan4@leviathan:~/.trash$ ./bin
 01010100 01101001 01110100 01101000 00110100 01100011 01101111 01101011 01100101 01101001 00001010
+```
 
 I think it's an ascii that represents the password.
 Let's google how to make it ascii and figure it out:
 
+```
 leviathan4@leviathan:~/.trash$ ./bin | perl -lape '$_=pack"(B8)*",@F'
 Tith4cokei
+```
 
 Is that the password? I think so.. :)
 Well it didn't work. probably because of the endline. let's copy it in a file and move it as a password.
 
+```
 nir@LAPTOP-8C4IQCNL:/mnt/c/tmp$ sshpass -f password ssh -l leviathan5 -p 2223 leviathan.labs.overthewire.org
+```
 
 Worked!

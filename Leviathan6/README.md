@@ -1,23 +1,28 @@
 # Leviathan 6 - Walkthrough
 
+```
 leviathan6@leviathan:~$ ls
 leviathan6
 leviathan6@leviathan:~$ ./leviathan6
 usage: ./leviathan6 <4 digit code>
 leviathan6@leviathan:~$ ./leviathan6  1234
 Wrong
+```
 
+Let's ltrace it:
 
+```
 leviathan6@leviathan:~$ ltrace ./leviathan6
 __libc_start_main(0x804853b, 1, 0xffffd784, 0x80485e0 <unfinished ...>
 printf("usage: %s <4 digit code>\n", "./leviathan6"usage: ./leviathan6 <4 digit code>
 )                                                  = 35
 exit(-1 <no return ...>
 +++ exited (status 255) +++
+```
 
 Let's figure out what are these 4 digits:
 
-
+```
 leviathan6@leviathan:~$ gdb leviathan6
 GNU gdb (Debian 7.12-6) 7.12.0.20161007-git
 Copyright (C) 2016 Free Software Foundation, Inc.
@@ -95,10 +100,12 @@ Dump of assembler code for function main:
 End of assembler dump.
 (gdb) disas main
 [1]+  Stopped                 gdb leviathan6
-
+```
 We see at address 0x0804854f that the pin is compared to 0x1bd3, which is 7123 decimal:
 
+```
 leviathan6@leviathan:~$ ./leviathan6 7123
 $ cat /etc/leviathan_pass/leviathan7
 ahy7MaeBo9
 $
+```
